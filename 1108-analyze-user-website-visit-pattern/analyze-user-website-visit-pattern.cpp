@@ -12,7 +12,7 @@ public:
       }  
     };
 
-    void subsets(int index, vector<string> &arr, vector<string> & temp, set<vector<string>> & ans) // CHANGE: ans is a set for unique patterns
+    void subsets(int index, vector<string> &arr, vector<string> & temp, set<vector<string>> & ans)
     {
         if(temp.size() > 3)
             return;
@@ -29,48 +29,42 @@ public:
             temp.pop_back();
         }
     }
-
     vector<string> mostVisitedPattern(vector<string>& username, vector<int>& timestamp, vector<string>& website) {
 
         int n = username.size();
-
-        // STEP 1: Build visits, sort by timestamp
-        vector<tuple<int, string, string>> visits;
+        vector<pair<int, int>> visits; // (timestamp, index in input)
         for(int i = 0; i < n; i++)
-            visits.push_back({timestamp[i], username[i], website[i]});
-        sort(visits.begin(), visits.end());
-
-        // STEP 2: Build per-user visit history (in order)
-        unordered_map<string,vector<string>> mp;
-        for(auto &t : visits)
         {
-            string user = get<1>(t);
-            string web = get<2>(t);
-            mp[user].push_back(web);
+            visits.push_back({timestamp[i], i});
+        }
+        sort(visits.begin(), visits.end()); // sort by timestamp
+
+        unordered_map<string, vector<string>> mp;
+        for(auto &p : visits)
+        {
+            int idx = p.second;
+            mp[username[idx]].push_back(website[idx]);
         }
 
-        // STEP 3: For each user, generate all unique 3-sequences and count per pattern
-        map<vector<string>, set<string>> ump; // pattern -> set of users
+        map<vector<string>, int> ump; // pattern -> number of users
 
         for(auto &it: mp)
         {
-            const string& user = it.first;
-            vector<string> &seq = it.second;
-
-            set<vector<string>> patterns; // store all unique patterns for this user
+            vector<string> &v = it.second;
+            set<vector<string>> patterns; // store unique patterns per user
             vector<string> temp;
-            subsets(0, seq, temp, patterns); // generate patterns
+            subsets(0, v, temp, patterns);
 
-            for(const auto& p : patterns) {
-                ump[p].insert(user);
+            for(auto &pat : patterns)
+            {
+                ump[pat]++;
             }
         }
 
-        // STEP 4: Use your priority queue logic
-        priority_queue<pair<int,vector<string>>, vector<pair<int,vector<string>>>, comp> pq;
-        for(auto &it : ump)
+        priority_queue<pair<int,vector<string>>, vector<pair<int,vector<string>>>,comp> pq;
+        for(auto it : ump)
         {
-            pq.push({(int)it.second.size(), it.first});
+            pq.push({it.second,it.first});
         }
 
         return pq.top().second;
