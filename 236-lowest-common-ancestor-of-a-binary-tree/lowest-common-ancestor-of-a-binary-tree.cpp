@@ -29,10 +29,15 @@ public:
             return root;
         }
 
-        if(left)
+        if(!left && !right)
+        {
+            return nullptr;
+        }
+        else if(left && !right)
         {
             return left;
         }
-        return right;
+        else
+            return right;
     }
 };
