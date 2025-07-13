@@ -1,12 +1,38 @@
 class Solution {
 public:
-    int maxFrequency(vector<int>& A, int k) {
-        unordered_map<int, int> count;
-        int res = 0;
-        for (int a : A) {
-            count[a] = max(count[a], count[k]) + 1;
-            res = max(res, count[a] - count[k]);
+
+    int calculate(vector<int>& nums, int k, int target)
+    {
+        int value = 0;
+        int maxValue = 0;
+        for(int num : nums)
+        {
+            if(num == k) value--;
+            if(num == target) value++;
+
+            if(value < 0) value = 0;
+
+            maxValue = max(maxValue,value);
         }
-        return count[k] + res;
+        return maxValue;
+    }
+
+    int maxFrequency(vector<int>& nums, int k) {
+
+        unordered_map<int,int> mp;
+        int original = 0;
+
+        for(auto num : nums)
+        {
+            mp[num]++;
+        }
+        
+        int maxVal = 0;
+        for(auto it : mp)
+        {
+            maxVal = max(maxVal, calculate(nums,k,it.first));
+        }
+
+        return maxVal + mp[k];
     }
 };
