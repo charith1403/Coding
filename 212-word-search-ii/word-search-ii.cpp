@@ -1,79 +1,103 @@
-class Node {
-public:
-    Node* links[26] = {}; // only 26 lowercase letters
+class Node
+{
+    public:
+    Node* links[26];
     bool flag = false;
     string word = "";
 
-    bool containsKey(char ch) { return links[ch - 'a'] != nullptr; }
+    bool containsKey(char ch)
+    {
+        if(links[ch - 'a'] == nullptr)
+        {
+            return false;
+        }
+        return true;
+    }
 
-    void put(char ch, Node* node) { links[ch - 'a'] = node; }
+    void putChar(char ch, Node* node)
+    {
+        links[ch - 'a'] = node;
+    }
+    Node* getChar(char ch)
+    {
+        return links[ch - 'a'];
+    }
 
-    Node* getNode(char ch) { return links[ch - 'a']; }
 };
-
 class Solution {
 public:
-    Node* root = new Node();
-
-    void insert(const string& s) {
-        Node* node = root;
-        for (char c : s) {
-            if (!node->containsKey(c)) {
-                node->put(c, new Node());
+    
+    void insert(string word, Node* node)
+    {
+        for(int i=0;i<word.size();i++)
+        {
+            if(!node->containsKey(word[i]))
+            {
+                node->putChar(word[i],new Node());
             }
-            node = node->getNode(c);
+            node = node->getChar(word[i]);
         }
-        node->word = s;
         node->flag = true;
+        node->word = word;
     }
 
-    void solve(vector<vector<char>>& board, Node* node, int i, int j,
-               vector<string>& ans) {
-        char ch = board[i][j];
-        if (ch == '#' || !node->containsKey(ch))
-            return;
+    void helper(int row , int col , Node* node, vector<string> &ans, vector<vector<char>>& board)
+{
+    // Check boundary and if the cell is visited
+    if(row < 0 || row >= board.size() || col < 0 || col >= board[0].size() || board[row][col] == '#' 
+    || !node->containsKey(board[row][col]))
+        return;
 
-        node = node->getNode(ch);
-        if (node->flag) {
-            ans.push_back(node->word);
-            node->flag = false; // avoid duplicates
-        }
+    char ch = board[row][col];
+    node = node->getChar(ch);
 
-        board[i][j] = '#'; // mark visited
-
-        int dx[4] = {-1, 0, 1, 0};
-        int dy[4] = {0, 1, 0, -1};
-
-        for (int dir = 0; dir < 4; dir++) {
-            int ni = i + dx[dir];
-            int nj = j + dy[dir];
-
-            if (ni >= 0 && nj >= 0 && ni < board.size() &&
-                nj < board[0].size()) {
-                solve(board, node, ni, nj, ans);
-            }
-        }
-
-        board[i][j] = ch; // restore character
+    // Found a word!
+    if(node->flag)
+    {
+        ans.push_back(node->word);
+        node->flag = false; // Avoid duplicates
     }
 
-    vector<string> findWords(vector<vector<char>>& board,
-                             vector<string>& words) {
+    board[row][col] = '#'; // Mark as visited
+
+    int dx[] = {1, 0, -1, 0};
+    int dy[] = {0, -1, 0, 1};
+
+    for(int i = 0; i < 4; i++)
+    {
+        int nrow = row + dx[i];
+        int ncol = col + dy[i];
+        helper(nrow, ncol, node, ans, board);
+    }
+
+    board[row][col] = ch; // Unmark
+}
+
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        
+        Node* root = new Node();
         vector<string> ans;
 
-        for (const string& word : words) {
-            insert(word);
+        for(auto word : words)
+        {
+            insert(word,root);
         }
 
-        int rows = board.size();
-        int cols = board[0].size();
 
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                solve(board, root, i, j, ans);
+        for(int i=0;i<board.size();i++)
+        {
+            for(int j=0;j<board[i].size();j++)
+            {
+                if(root->containsKey(board[i][j]))
+                {
+                    helper(i,j,root,ans,board);
+                }
+                
             }
         }
-
+        
         return ans;
+        
     }
 };
