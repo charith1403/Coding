@@ -1,35 +1,35 @@
 class Solution {
 public:
-    void helper(int curr, vector<int>& nums, vector<int>& dp, int& ans) {
-        if (curr >= nums.size() - 1) {
-            ans = 0;
-            return;
+    int helper(int curr,vector<int> &nums,vector<int> &dp)
+    {
+        if(curr >= nums.size() - 1)
+        {
+            return 0;
         }
 
-        if (dp[curr] != -1) {
-            ans = dp[curr];
-            return;
+        if(dp[curr] != -1)
+        {
+            return dp[curr];
         }
 
-        int min_jumps = INT_MAX;
+        int ans = INT_MAX;
 
-        for (int i = 1; i <= nums[curr]; i++) {
-            int next_ans = INT_MAX;
-            helper(curr + i, nums, dp, next_ans);
-
-            if (next_ans != INT_MAX) {
-                min_jumps = min(min_jumps, 1 + next_ans);
+        for(int i=1;i<=nums[curr];i++)
+        {
+            int next = INT_MAX;
+            next = helper(curr+i,nums,dp);
+            if(next != INT_MAX)
+            {
+                ans = min(ans,1+next);
             }
         }
 
-        dp[curr] = min_jumps;
-        ans = dp[curr];
+        dp[curr] = ans;
+        return dp[curr];
     }
 
     int jump(vector<int>& nums) {
-        vector<int> dp(nums.size(), -1);
-        int ans = INT_MAX;
-        helper(0, nums, dp, ans);
-        return ans;
+        vector<int>dp(nums.size() + 1, -1);
+        return helper(0,nums,dp);
     }
 };
