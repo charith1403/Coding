@@ -1,35 +1,18 @@
 class Solution {
 public:
+    bool canJump(vector<int>& nums) {
+        int reachable = 0;
 
-    bool helper(int index, vector<int>&nums,vector<int> &dp)
-    {
-        if(index >= nums.size() - 1)
-        {
-            return true;
-        }
+        for (int i = 0; i < nums.size(); i++) {
+            if (i > reachable) {
+                return false;
+            }
 
-        if(dp[index] != -1)
-        {
-            return dp[index];
-        }
-
-        bool flag = false;
-
-        for(int i=1;i<=nums[index];i++)
-        {
-            if(helper(index + i,nums,dp))
-            {
-                flag = true;
+            reachable = max(reachable, i + nums[i]);
+            if (reachable > nums.size() - 1) {
                 break;
             }
         }
-        dp[index] = flag;
-        return dp[index];
-
-    }
-
-    bool canJump(vector<int>& nums) {
-        vector<int> dp(nums.size() + 1, -1);
-        return helper(0,nums,dp);
+        return true;
     }
 };
