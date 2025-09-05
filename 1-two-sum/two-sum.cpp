@@ -4,24 +4,6 @@ public:
         int low = 0;
         int high = nums.size() - 1;
 
-        // while(low <= high)
-        // {
-        //     int sum = nums[low] + nums[high];
-
-        //     if(sum == target)
-        //     {
-        //         return {low,high};
-        //     }
-        //     else if(sum < target)
-        //     {
-        //         low++;
-        //     }
-        //     else
-        //     {
-        //         high--;
-        //     }
-        // }
-
         unordered_map<int,int> mp;
 
         for(int i=0;i<nums.size();i++)
