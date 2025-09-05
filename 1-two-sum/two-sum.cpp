@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int low = 0;
+        int high = nums.size() - 1;
+
+        // while(low <= high)
+        // {
+        //     int sum = nums[low] + nums[high];
+
+        //     if(sum == target)
+        //     {
+        //         return {low,high};
+        //     }
+        //     else if(sum < target)
+        //     {
+        //         low++;
+        //     }
+        //     else
+        //     {
+        //         high--;
+        //     }
+        // }
+
+        unordered_map<int,int> mp;
+
+        for(int i=0;i<nums.size();i++)
+        {
+            mp[nums[i]] = i;
+        }
+
+        for(int i=0;i<nums.size();i++)
+        {
+            if(mp.find(target-nums[i]) != mp.end() && i != mp[target-nums[i]])
+            {
+                return {i,mp[target-nums[i]]};
+            }
+        }
+
+        return {-1};
+    }
+};
