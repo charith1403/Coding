@@ -7,14 +7,14 @@ public:
         while(low <= high)
         {
             int mid = (low + high)/2;
-            int r = mid / matrix[0].size();
-            int c = mid % matrix[0].size();
+            int row = mid / matrix[0].size();
+            int col = mid % matrix[0].size();
 
-            if(matrix[r][c] == target)
+            if(matrix[row][col] == target)
             {
                 return true;
             }
-            else if(matrix[r][c] > target)
+            else if(matrix[row][col] > target)
             {
                 high = mid - 1;
             }
