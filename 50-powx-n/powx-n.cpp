@@ -1,0 +1,33 @@
+class Solution {
+public:
+    double myPower(double x, long long n) {
+        if (n == 0) {
+            return 1;
+        }
+        if (n == 1) {
+            return x;
+        }
+
+        double temp = 1;
+        double res = 0;
+
+        temp = myPower(x, n / 2);
+        if (n % 2 == 1) {
+            res = temp * temp * x;
+        } else {
+            res = temp * temp;
+        }
+
+        return res;
+    }
+
+    double myPow(double x, int n) { 
+        long long N = n;
+        if(n < 0)
+        {
+            N = -N;
+            x = 1/ x;
+        }
+        return myPower(x, N); 
+        }
+};
