@@ -8,10 +8,8 @@ public:
             return x;
         }
 
-        double temp = 1;
         double res = 0;
-
-        temp = myPower(x, n / 2);
+        double temp = myPower(x, n / 2);
         if (n % 2 == 1) {
             res = temp * temp * x;
         } else {
@@ -21,13 +19,12 @@ public:
         return res;
     }
 
-    double myPow(double x, int n) { 
+    double myPow(double x, int n) {
         long long N = n;
-        if(n < 0)
-        {
+        if (n < 0) {
             N = -N;
-            x = 1/ x;
+            x = 1 / x;
         }
-        return myPower(x, N); 
-        }
+        return myPower(x, N);
+    }
 };
